@@ -1,0 +1,27 @@
+groups: 
+- name: 51.250.10.188
+  rules:
+  - alert: WrongResponse
+    expr: probe_http_status_code{instance="http://51.250.10.188:30007", job="blackbox"} != 200
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Response is not 200"
+  - alert: SlowResponse
+    expr: probe_duration_seconds{instance="http://51.250.10.188:30007", job="blackbox"} > 5
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Response is longer than 5 seconds"
+- name: Manager Server
+  rules:
+  - alert: FreeSpace
+    expr: node_filesystem_avail_bytes{instance="node-exporter:9100", job="node"} < 1073741824
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Free space on srv is less than 1 Gb"
+

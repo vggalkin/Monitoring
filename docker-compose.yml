@@ -1,0 +1,108 @@
+version: '3.2'
+
+networks:
+  grafana:
+
+services:
+
+    prometheus:
+        image: prom/prometheus:latest
+        volumes:
+            - ./prometheus:/etc/prometheus/
+        command:
+            - --config.file=/etc/prometheus/prometheus.yml
+        ports:
+            - 9090:9090
+        restart: always
+        networks:
+          - grafana
+
+    loki:
+      image: grafana/loki:2.3.0
+      ports:
+        - "3100:3100"
+      command: -config.file=/etc/loki/local-config.yaml
+      networks:
+        - grafana
+
+    promtail:
+      image: grafana/promtail:2.3.0
+      volumes:
+        - /var/log:/var/log
+      command: -config.file=/etc/promtail/config.yml
+      networks:
+        - grafana
+
+    node-exporter:
+        image: prom/node-exporter
+        volumes:
+            - /proc:/host/proc:ro
+            - /sys:/host/sys:ro
+            - /:/rootfs:ro
+        hostname: monitoring
+        command:
+            - --path.procfs=/host/proc
+            - --path.sysfs=/host/sys
+            - --collector.filesystem.ignored-mount-points
+            - ^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)
+        ports:
+            - 9100:9100
+        restart: always
+        networks:
+          - grafana
+
+    alertmanager-bot:
+      command:
+        - --alertmanager.url=http://alertmanager:9093
+        - --store=bolt
+        - --log.level=info
+        - --bolt.path=/data/databot.db
+      environment:
+          TELEGRAM_ADMIN: ""
+          TELEGRAM_TOKEN: 
+      image: metalmatze/alertmanager-bot:0.4.3
+      ports:
+        - 8080:8080
+      restart: always
+      volumes:
+        - ./data:/data
+      networks:
+        - grafana
+
+    alertmanager:
+      image: prom/alertmanager:v0.21.0
+      ports:
+        - 9093:9093
+      volumes:
+        - ./alertmanager/:/etc/alertmanager/
+      restart: always
+      command:
+        - '--config.file=/etc/alertmanager/config.yml'
+        - '--storage.path=/etc/alertmanager/data'
+      networks:
+        - grafana
+    grafana:
+        image: grafana/grafana
+        user: "$UID:$GID"
+        depends_on:
+            - prometheus
+        ports:
+            - 3000:3000
+        volumes:
+            - ./grafana:/var/lib/grafana
+            - ./grafana/provisioning/:/etc/grafana/provisioning/
+        restart: always
+        networks:
+          - grafana
+
+    blackbox-exporter:
+      image: prom/blackbox-exporter
+      ports:
+        - 9115:9115
+      restart: always
+      volumes:
+        - ./blackbox:/config
+      command: --config.file=/config/blackbox.yml
+      networks:
+        - grafana
+
