@@ -58,8 +58,8 @@ services:
         - --log.level=info
         - --bolt.path=/data/databot.db
       environment:
-          TELEGRAM_ADMIN: ""
-          TELEGRAM_TOKEN: 
+          TELEGRAM_ADMIN: ${TELEGRAM_ADMIN}
+          TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
       image: metalmatze/alertmanager-bot:0.4.3
       ports:
         - 8080:8080
