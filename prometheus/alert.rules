@@ -1,5 +1,5 @@
 groups: 
-- name: 51.250.10.188
+- name: Django App
   rules:
   - alert: WrongResponse
     expr: probe_http_status_code{instance="http://51.250.10.188:30007", job="blackbox"} != 200
