@@ -37,7 +37,7 @@ sudo docker-compose up -d
 
 5. Telegram Bot
 
-![image](https://user-images.githubusercontent.com/3630798/201344023-30ef8dc3-2e11-4882-bd41-459294a29c4d.png)
+![image](https://user-images.githubusercontent.com/3630798/201358936-a0eea1ad-02b7-4ace-91c3-b976ce0db16d.png)
 
 6. Grafana
 
