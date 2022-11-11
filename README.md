@@ -31,3 +31,17 @@ alert.rules
 ```console
 sudo docker-compose up -d
 ```
+Результат
+
+![image](https://user-images.githubusercontent.com/3630798/201343057-914ff935-6794-4540-9043-230e5445301b.png)
+
+5. Telegram Bot
+
+![image](https://user-images.githubusercontent.com/3630798/201344023-30ef8dc3-2e11-4882-bd41-459294a29c4d.png)
+
+6. Grafana
+
+![image](https://user-images.githubusercontent.com/3630798/201346877-f44f9214-3f45-4c2e-a66f-ec6f75c1cf74.png)
+
+![image](https://user-images.githubusercontent.com/3630798/201347018-117ae1e9-9633-4387-9b99-d18271014d12.png)
+
